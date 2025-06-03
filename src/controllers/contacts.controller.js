@@ -3,6 +3,8 @@ import {
   getAllContactsService,
   getContactByIdService,
   createContactService,
+  updateContactService,
+  deleteContactService,
 } from '../services/contacts.services.js';
 
 export const getContactsController = async (req, res) => {
@@ -35,4 +37,33 @@ export const createContactController = async (req, res) => {
   const data = await createContactService(req.body);
 
   res.status(201).json({ status: 201, message: 'Successfully created a contact!', data: data });
+};
+
+export const updateContactController = async (req, res) => {
+  const { contactId } = req.params;
+  console.log("req.params", req.params);
+  console.log(contactId);
+  const contact = await updateContactService(contactId, req.body);
+
+  if (!contact) {
+    throw createHttpError(404, 'Contact not found');
+  }
+
+  res.status(200).json({
+    status: 200,
+    message: 'Successfully patched a contact!',
+    data: contact,
+  });
+}
+
+export const deleteContactController = async (req, res) => {
+  const { contactId } = req.params;
+  const contact = await deleteContactService(contactId, req.body);
+
+
+  if (!contact) {
+    throw createHttpError(404, 'Contact not found');
+  }
+
+  res.status(204).end();
 };

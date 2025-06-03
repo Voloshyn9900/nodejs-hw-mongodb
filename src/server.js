@@ -1,25 +1,46 @@
 import express from 'express';
 import cors from 'cors';
-import pino from 'pino-http';
-import { initMongoConnection } from './db/initMongoConnection.js';
+import pino from 'pino';
+import pinoHttp from 'pino-http';
+
 import router from './routers/index.js';
+import { initMongoConnection } from './db/initMongoConnection.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 
 export async function setupServer() {
+  const isDev = process.env.NODE_ENV !== 'production';
+
+  const logger = pino(
+    isDev
+      ? {
+          // prettifier только в dev-режиме
+          transport: {
+            target: 'pino-pretty',
+            options: {
+              colorize: true,
+              translateTime: 'HH:MM:ss',
+              ignore: 'pid,hostname',
+            },
+          },
+        }
+      : undefined // в проде пишем «сырой» JSON
+  );
+
+
+
   const app = express();
   app.use(cors());
-  app.use(pino());
+  app.use(pinoHttp({ logger }));
 
-  app.use(express.json())
+  app.use(express.json());
 
-  app.use("/", router);
+  app.use('/', router);
   // app.use(router);
 
   app.use(notFoundHandler);
 
   app.use(errorHandler);
-
 
   try {
     const PORT = process.env.PORT || 3000;

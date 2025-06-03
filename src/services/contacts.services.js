@@ -11,3 +11,14 @@ export const getContactByIdService = async contactId => {
 export const createContactService = async (payload) => {
   return await Contact.create(payload);
 };
+
+export const updateContactService = async (contactId, payload) => {
+  const result = await Contact.findByIdAndUpdate(contactId, payload, { new: true });
+  console.log(result, 'contacts.services');
+
+  return result
+};
+
+export const deleteContactService = async contactId => {
+  return await Contact.findByIdAndDelete(contactId);
+};
