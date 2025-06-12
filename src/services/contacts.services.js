@@ -1,16 +1,32 @@
 import { Contact } from '../models/contact.model.js';
 import { calcPaginationParams } from '../utils/calcPaginationParams.js';
 
-export const getAllContactsService = async ({ page = 1, perPage = 10 }) => {
+export const getAllContactsService = async ({
+  page = 1,
+  perPage = 10,
+  sortBy ,
+  sortOrder,
+}) => {
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
+  const contactQuery = Contact.find().sort({ [sortBy]: sortOrder });
+  const totalContacts = await Contact.countDocuments(); // .merge(contactQuery)
+  const contacts = await contactQuery.skip(skip).limit(limit).exec(); // повертає всі контакти
 
-  const contactQuery = Contact.find();
-  const totalContacts = await Contact.find().merge(contactQuery).countDocuments();
-  const contacts = await Contact.find().merge(contactQuery).skip(skip).limit(limit).exec(); // повертає всі контакти
 
-  const paginationData = calcPaginationParams(totalContacts, page, perPage); 
+  
+  // const [total, students] = await Promise.all([
+  //   Student.countDocuments(studentQuery),
+  //   studentQuery
+  //     .sort({ [sortBy]: sortOrder })
+  //     .skip(skip)
+  //     .limit(perPage),
+  // ]);
+
+
+
+  const paginationData = calcPaginationParams(totalContacts, page, perPage);
 
   return {
     data: contacts,
