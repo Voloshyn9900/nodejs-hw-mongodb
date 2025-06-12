@@ -8,14 +8,19 @@ import {
 } from '../services/contacts.services.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
+import { parseFilterParams } from '../utils/parseFilterParams.js';
 
 export const getContactsController = async (req, res) => {
-  console.log(req.query);
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
+  const filter = parseFilterParams(req.query);
 
-  const contacts = await getAllContactsService({ page, perPage, sortBy, sortOrder });
+  console.log(req.query);
+  console.log(page, '|', perPage, '|', sortBy, '|', sortOrder, '|', filter);
 
+  const contacts = await getAllContactsService({ page, perPage, sortBy, sortOrder, filter });
+  console.log('req.query:', req.query);
+  console.log('filter:', filter);
   res.status(200).json({
     status: 200,
     message: 'Successfully found contacts!',
