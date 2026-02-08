@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 // import pino from 'pino';
 // import pinoHttp from 'pino-http';
+import cookieParser from 'cookie-parser';
 
 import router from './routers/index.js';
 import { initMongoConnection } from './db/initMongoConnection.js';
@@ -27,10 +28,9 @@ export async function setupServer() {
   //     : undefined // в проде пишем «сырой» JSON
   // );
 
-
-
   const app = express();
   app.use(cors());
+  app.use(cookieParser());
   // app.use(pinoHttp({ logger }));
 
   app.use(express.json());

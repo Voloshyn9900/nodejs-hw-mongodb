@@ -7,15 +7,14 @@ export const getAllContactsService = async ({
   sortBy = '_id',
   sortOrder = 'asc',
   filter = {},
+  userId,
 }) => {
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
-  const contactQuery = Contact.find(filter).sort({ [sortBy]: sortOrder });
-  const totalContacts = await Contact.countDocuments(filter); // .merge(contactQuery)
+  const contactQuery = Contact.find({...filter, userId}).sort({ [sortBy]: sortOrder });
+  const totalContacts = await Contact.countDocuments({ ...filter, userId }); // .merge(contactQuery)
   const contacts = await contactQuery.skip(skip).limit(limit).exec(); // повертає всі контакти
-
-
 
   // const [total, students] = await Promise.all([
   //   Student.countDocuments(studentQuery),
@@ -33,21 +32,21 @@ export const getAllContactsService = async ({
   };
 };
 
-export const getContactByIdService = async contactId => {
-  return await Contact.findById(contactId); // повертає один за id
+export const getContactByIdService = async (contactId, userId) => {
+  return await Contact.findOne({_id:contactId, userId}); // повертає один за id
 };
 
 export const createContactService = async payload => {
   return await Contact.create(payload);
 };
 
-export const updateContactService = async (contactId, payload) => {
-  const result = await Contact.findByIdAndUpdate(contactId, payload, { new: true });
+export const updateContactService = async (contactId, userId, payload) => {
+  const result = await Contact.findOneAndUpdate({ _id: contactId, userId }, payload, { new: true });
   console.log(result, 'contacts.services');
 
   return result;
 };
 
-export const deleteContactService = async contactId => {
-  return await Contact.findByIdAndDelete(contactId);
+export const deleteContactService = async (contactId, userId) => {
+  return await Contact.findOneAndDelete({ _id: contactId, userId });
 };
