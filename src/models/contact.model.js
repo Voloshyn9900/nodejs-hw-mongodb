@@ -30,6 +30,11 @@ const contactSchema = new mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: 'users',
     },
+    avatar: {
+      type: String,
+      required: false,
+      default: null,
+    },
   },
   { timestamps: true } // створить поля createdAt та updatedAt
 );

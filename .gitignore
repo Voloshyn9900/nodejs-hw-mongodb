@@ -7,6 +7,11 @@ yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 
+
+/src/tmp/*
+!/src/tmp/.gitkeep
+/src/uploads/photo/*
+!/src/uploads/photo/.gitkeep
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 

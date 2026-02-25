@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 // import pino from 'pino';
@@ -27,7 +28,6 @@ export async function setupServer() {
   //       }
   //     : undefined // в проде пишем «сырой» JSON
   // );
-
   const app = express();
   app.use(cors());
   app.use(cookieParser());

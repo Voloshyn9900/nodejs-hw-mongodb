@@ -1,5 +1,4 @@
-import Joi from "joi";
-
+import Joi from 'joi';
 
 export const userRegistrationSchema = Joi.object({
   name: Joi.string().required(),
@@ -10,4 +9,13 @@ export const userRegistrationSchema = Joi.object({
 export const userLoginSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
+});
+
+export const sendResetPasswordSchema = Joi.object({
+  email: Joi.string().email().required(),
+});
+
+export const resetPasswordSchema = Joi.object({
+  password: Joi.string().required(),
+  token: Joi.string().required(),
 });

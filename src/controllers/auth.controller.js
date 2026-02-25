@@ -3,6 +3,8 @@ import {
   loginUserServices,
   logoutUserService,
   refreshUsersSession,
+  sendResetPasswordService,
+  resetPasswordService,
 } from '../services/auth.services.js';
 
 const setupSession = (res, session) => {
@@ -60,3 +62,19 @@ export const logoutController = async (req, res) => {
 
   res.status(204).send();
 };
+
+export async function sendResetPasswordController(req, res) {
+  const { email } = req.body;
+  await sendResetPasswordService(email);
+
+  res.json({ status: 200, message: 'Reset password email has been successfully sent.', data: {} });
+}
+
+
+export async function resetPasswordController(req, res) {
+  const { password, token } = req.body;
+
+  await resetPasswordService(password, token);
+
+  res.send({ status: 200, message: 'Password has been successfully reset.', data: {} });
+}
