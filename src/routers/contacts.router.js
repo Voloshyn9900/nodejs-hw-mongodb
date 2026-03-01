@@ -11,16 +11,20 @@ import { validateBody } from "../middlewares/validateBody.js";
 import { contactsSchemaCreate, contactsSchemaUpdate } from "../validation/contacts.schema.js";
 import { isValidId } from "../middlewares/isValidId.js";
 import { authenticate } from '../middlewares/authenticate.js';
+import { upload } from "../middlewares/upload.js";
 
 const router = Router();
 
+// Это и есть место, где создаётся req.user Здесь Вы “навешиваете пользователя” на запрос. Что позволяет знать кто под какой учеткой.
 router.use(authenticate);
+
 router.get('/', ctrWrapper(getContactsController));
 router.get('/:contactId', isValidId, ctrWrapper(getContactController));
 
-router.post('/', validateBody(contactsSchemaCreate), ctrWrapper(createContactController)); // Реєстрацію роута в файлі src/routers/contacts.js
+router.post('/', upload.single("photo"), validateBody(contactsSchemaCreate), ctrWrapper(createContactController)); // Реєстрацію роута в файлі src/routers/contacts.js
 router.patch(
   '/:contactId',
+  upload.single('photo'),
   isValidId,
   validateBody(contactsSchemaUpdate),
   ctrWrapper(updateContactController)

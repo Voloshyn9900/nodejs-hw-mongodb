@@ -4,7 +4,7 @@ import cors from 'cors';
 // import pino from 'pino';
 // import pinoHttp from 'pino-http';
 import cookieParser from 'cookie-parser';
-
+import path from 'node:path';
 import router from './routers/index.js';
 import { initMongoConnection } from './db/initMongoConnection.js';
 import { errorHandler } from './middlewares/errorHandler.js';
@@ -29,6 +29,11 @@ export async function setupServer() {
   //     : undefined // в проде пишем «сырой» JSON
   // );
   const app = express();
+
+  // Позволяет открыть фото/файл на http://localhost:3000/photo/1772058451111-447653281JeffersonAirplane.png
+  // с по пути  'src', 'uploads', 'photo'
+  app.use('/photo', express.static(path.resolve('src', 'uploads', 'photo')));
+
   app.use(cors());
   app.use(cookieParser());
   // app.use(pinoHttp({ logger }));

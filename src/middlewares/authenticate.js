@@ -7,6 +7,7 @@ import { User } from '../models/user.model.js';
 
 export const authenticate = async (req, res, next) => {
   const authHeader = req.get('Authorization');
+  console.log("Authorization ========authHeader======= Authorization", authHeader);
 
   if (!authHeader) {
     next(createHttpError(401, 'Please provide Authorization header'));
